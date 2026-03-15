@@ -32,8 +32,8 @@ export class MainMenu extends Scene {
         }).setOrigin(0.5);
 
         // Helper function to create a nice button
-        const createButton = (y: number, text: string, callback: () => void) => {
-            const button = this.add.text(centerX - 90, y, text, {
+        const createButton = (y: number, x: number, text: string, callback: () => void) => {
+            const button = this.add.text(centerX - 190 + x*400, centerY +  y*100, text, {
                 fontFamily: 'Arial',
                 fontSize: '32px',
                 color: COLORS.buttonText,
@@ -61,20 +61,31 @@ export class MainMenu extends Scene {
         };
 
         // The 3 clickable buttons
-        createButton(centerY + 40, 'Start Demo 1', () => {
+        createButton(0 ,0, 'Start Demo 1', () => {
             this.scene.start('Demo1');
         });
 
-        createButton(centerY + 130, 'Start Demo 2', () => {
+        createButton(1 ,0, 'Start Demo 2', () => {
+            this.scene.start('Demo2');
+        });
+
+        createButton(2 ,0, 'Start Demo 3', () => {
+            this.scene.start('Demo3');
+        });
+
+        createButton(0 ,1, 'Start Demo 4', () => {
+            this.scene.start('Demo4');
+        });
+
+        createButton(1 ,1, 'Start Demo 5', () => {
+            this.scene.start('Demo5');
+        });
+
+        createButton(2 ,1, 'Game', () => {
             this.scene.start('Game');
         });
 
-        createButton(centerY + 220, 'Start Demo 3', () => {
-            //this.scene.start('Game');
-            alert('Demo 3 would open here!\n(You can add another scene if you want)');
-        });
-
-        createButton(centerY + 310, 'Quit', () => {
+        createButton(3 ,1, 'Quit', () => {
             if (confirm('Quit the game?')) {
                 this.game.destroy(true);
             }

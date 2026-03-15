@@ -2,6 +2,10 @@ import { Boot } from './scenes/Boot';
 import { GameOver } from './scenes/GameOver';
 import { Game as MainGame } from './scenes/Game';
 import { Demo1 } from './scenes/Demo1';
+import { Demo2 } from './scenes/Demo2';
+import { Demo3 } from './scenes/Demo3';
+import { Demo4 } from './scenes/Demo4';
+import { Demo5 } from './scenes/Demo5';
 import { MainMenu } from './scenes/MainMenu';
 import { AUTO, Game } from 'phaser';
 import { Preloader } from './scenes/Preloader';
@@ -26,6 +30,10 @@ const config: Phaser.Types.Core.GameConfig = {
         Preloader,
         MainMenu,
         Demo1,
+        Demo2,
+        Demo3,
+        Demo4,
+        Demo5,
         MainGame,
         GameOver
     ]

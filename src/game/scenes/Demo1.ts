@@ -8,10 +8,6 @@ export class Demo1 extends Scene
     exit_text: Phaser.GameObjects.Text;
     private player!: Phaser.Physics.Arcade.Sprite;
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-    //wKey: Phaser.Input.Keyboard.Key;
-    //aKey: Phaser.Input.Keyboard.Key;
-    //sKey: Phaser.Input.Keyboard.Key;
-    //dKey: Phaser.Input.Keyboard.Key;
     private wasd!: { [key: string]: Phaser.Input.Keyboard.Key };
     private lastDirection: 'up' | 'down' | 'left' | 'right' = 'down';
 
