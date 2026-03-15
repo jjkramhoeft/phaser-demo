@@ -19,7 +19,8 @@ export class Demo1 extends Scene
     preload()
     {
         // Load the sprite sheet for the player (https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator)
-        this.load.spritesheet('player', 'assets/player.png',{ frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-walk', 'assets/player.png',{ frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-thrust', 'assets/thrust_oversize.png',{ frameWidth: 192, frameHeight: 192 });
     }
 
     create ()
@@ -52,45 +53,71 @@ export class Demo1 extends Scene
         // Sprite sheet layout: row 0 = up, row 1 = left, row 2 = down, row 3 = right
         this.anims.create({
             key: 'walk-up',
-            frames: this.anims.generateFrameNumbers('player', { start: 0, end: 7 }),
+            frames: this.anims.generateFrameNumbers('player-walk', { start: 0, end: 7 }),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
             key: 'walk-left',
-            frames: this.anims.generateFrameNumbers('player', { start: 13, end: 20 }),
+            frames: this.anims.generateFrameNumbers('player-walk', { start: 13, end: 20 }),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
             key: 'walk-down',
-            frames: this.anims.generateFrameNumbers('player', { start: 26, end: 33 }),
+            frames: this.anims.generateFrameNumbers('player-walk', { start: 26, end: 33 }),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
             key: 'walk-right',
-            frames: this.anims.generateFrameNumbers('player', { start: 39, end: 46 }),
-            frameRate: 10,
+            frames: this.anims.generateFrameNumbers('player-walk', { start: 39, end: 46 }),
+            frameRate: 14,
+            repeat: -1
+        });
+        // Create basic directional attack animations (8 frames per row)
+        // Sprite sheet layout: row 0 = up, row 1 = left, row 2 = down, row 3 = right
+        this.anims.create({
+            key: 'thrust-up',
+            frames: this.anims.generateFrameNumbers('player-thrust', { start: 0, end: 7 }),
+            frameRate: 14,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'thrust-left',
+            frames: this.anims.generateFrameNumbers('player-thrust', { start: 8, end: 15 }),
+            frameRate: 14,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'thrust-down',
+            frames: this.anims.generateFrameNumbers('player-thrust', { start: 16, end: 23 }),
+            frameRate: 14,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'thrust-right',
+            frames: this.anims.generateFrameNumbers('player-thrust', { start: 24, end: 31 }),
+            frameRate: 14,
             repeat: -1
         });
 
         // Idle = first frame of each direction
-        this.anims.create({ key: 'idle-up',  frames: [{ key: 'player', frame: 0 }],  frameRate: 10 });
-        this.anims.create({ key: 'idle-left',  frames: [{ key: 'player', frame: 13 }],  frameRate: 10 });
-        this.anims.create({ key: 'idle-down', frames: [{ key: 'player', frame: 26 }],  frameRate: 10 });
-        this.anims.create({ key: 'idle-right',    frames: [{ key: 'player', frame: 39 }], frameRate: 10 });
+        this.anims.create({ key: 'idle-up',  frames: [{ key: 'player-walk', frame: 0 }],  frameRate: 10 });
+        this.anims.create({ key: 'idle-left',  frames: [{ key: 'player-walk', frame: 13 }],  frameRate: 10 });
+        this.anims.create({ key: 'idle-down', frames: [{ key: 'player-walk', frame: 26 }],  frameRate: 10 });
+        this.anims.create({ key: 'idle-right',    frames: [{ key: 'player-walk', frame: 39 }], frameRate: 10 });
 
         const centerX = this.cameras.main.centerX;
         const centerY = this.cameras.main.centerY;
 
-        this.player = this.physics.add.sprite(centerX, centerY, 'player', 0);
+        this.player = this.physics.add.sprite(centerX, centerY, 'player-walk', 0);
         this.player.setCollideWorldBounds(true);
         this.player.anims.play('idle-down');
 
         // Input (arrows + WASD)
         this.cursors = this.input.keyboard!.createCursorKeys();
-        this.wasd = this.input.keyboard!.addKeys('W,S,A,D') as any;
+        this.wasd = this.input.keyboard!.addKeys('W,S,A,D,Q') as any;
 
 
     }
@@ -100,6 +127,7 @@ export class Demo1 extends Scene
         const speed = 200;                    // ← change this to make player faster/slower
         let vx = 0;
         let vy = 0;
+        let isThrusting = false;
 
         // === INPUT (checked every frame) ===
         if (this.cursors.left.isDown || this.wasd.A.isDown) vx = -speed;
@@ -114,12 +142,26 @@ export class Demo1 extends Scene
             vy = vy > 0 ? norm : -norm;
         }
 
+        if(this.wasd.Q.isDown){
+            vx=0;
+            vy=0;
+            isThrusting= true;
+        }
+        else{
+            isThrusting= false;
+        }
+
         this.player.setVelocity(vx, vy);
 
         // === ANIMATION LOGIC (the heart of 4-directional movement) ===
         if (vx === 0 && vy === 0) {
-            // Stopped → play idle in the last direction the player faced
-            this.player.anims.play(`idle-${this.lastDirection}`, true);
+            if(isThrusting){
+                // Stopped → play thrust in the last direction the player faced
+                this.player.anims.play(`thrust-${this.lastDirection}`, true);
+            }else{
+                // Stopped → play idle in the last direction the player faced
+                this.player.anims.play(`idle-${this.lastDirection}`, true);
+            }
         } else {
             // Moving → decide which direction to animate
             let newDir: 'up' | 'down' | 'left' | 'right';
@@ -131,7 +173,7 @@ export class Demo1 extends Scene
             }
 
             this.lastDirection = newDir;
-            this.player.anims.play(`walk-${newDir}`, true);
+            this.player.anims.play(`thrust-${newDir}`, true);
         }
     }
 }
