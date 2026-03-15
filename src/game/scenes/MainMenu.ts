@@ -1,54 +1,53 @@
 import { Scene, GameObjects } from 'phaser';
 
-export class MainMenu extends Scene
-{
+const COLORS = {
+    title: '#ffffff',
+    titleStroke: '#000000',
+    buttonText: '#ffffff',
+    buttonBg: '#2d2d2d',
+    buttonHoverBg: '#555555',
+};
+
+export class MainMenu extends Scene {
     background: GameObjects.Image;
     logo: GameObjects.Image;
     title: GameObjects.Text;
     option1: GameObjects.Text;
     option2: GameObjects.Text;
 
-    constructor ()
-    {
+    constructor() {
         super('MainMenu');
     }
 
-    create ()
-    {
+    create() {
         this.background = this.add.image(512, 384, 'background');
         const centerY = this.cameras.main.centerY;
         const centerX = this.cameras.main.centerX;
-        this.logo = this.add.image(512, 300, 'logo');
+        this.logo = this.add.image(512, 200, 'logo');
 
-        this.title = this.add.text(512, 360, 'Main JJK Menu', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
+        this.title = this.add.text(512, 260, 'Main JJK Menu', {
+            fontFamily: 'Arial Black', fontSize: 38, color: COLORS.title,
+            stroke: COLORS.titleStroke, strokeThickness: 8,
             align: 'center'
         }).setOrigin(0.5);
 
-        
-
-        //this.input.once('pointerdown', () => {
-        //    this.scene.start('Game');
-        //});
-
         // Helper function to create a nice button
-        const createButton = ( y: number, text: string, callback: () => void) => {
-            const button = this.add.text(centerX-90, y, text, {
+        const createButton = (y: number, text: string, callback: () => void) => {
+            const button = this.add.text(centerX - 90, y, text, {
                 fontFamily: 'Arial',
                 fontSize: '32px',
-                color: '#ffffff',
-                backgroundColor: '#2d2d2d',
+                color: COLORS.buttonText,
+                backgroundColor: COLORS.buttonBg,
                 align: 'center',
                 fixedWidth: 300
             })
-            .setPadding(20)
-            .setOrigin(0.5)
-            .setInteractive({ useHandCursor: true });
+                .setPadding(20)
+                .setOrigin(0.5)
+                .setInteractive({ useHandCursor: true });
 
             // Hover effects
-            button.on('pointerover', () => button.setBackgroundColor('#555555'));
-            button.on('pointerout', () => button.setBackgroundColor('#2d2d2d'));
+            button.on('pointerover', () => button.setBackgroundColor(COLORS.buttonHoverBg));
+            button.on('pointerout', () => button.setBackgroundColor(COLORS.buttonBg));
 
             // Click action
             button.on('pointerdown', () => {
@@ -61,8 +60,8 @@ export class MainMenu extends Scene
             return button;
         };
 
-        // The 3 clickable texts
-        createButton(centerY+40 , 'Start Demo 1', () => {
+        // The 3 clickable buttons
+        createButton(centerY + 40, 'Start Demo 1', () => {
             this.scene.start('Demo1');
         });
 
