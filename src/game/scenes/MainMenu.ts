@@ -61,11 +61,11 @@ export class MainMenu extends Scene {
         };
 
         // The 3 clickable buttons
-        createButton(0 ,0, 'Start Demo 1', () => {
+        createButton(0 ,0, 'Player Demo', () => {
             this.scene.start('Demo1');
         });
 
-        createButton(1 ,0, 'Start Demo 2', () => {
+        createButton(1 ,0, 'Tile Demo', () => {
             this.scene.start('Demo2');
         });
 
