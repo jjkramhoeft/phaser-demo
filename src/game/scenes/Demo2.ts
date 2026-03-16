@@ -18,10 +18,14 @@ export class Demo2 extends Scene
     buttons: Phaser.GameObjects.Text[] = [];
     private player!: Phaser.Physics.Arcade.Sprite;
     private wasd!: { [key: string]: Phaser.Input.Keyboard.Key };
-    private isFalling: boolean = false;
     private playerCollider!: Phaser.Physics.Arcade.Collider;
     private gameOverText!: Phaser.GameObjects.Text;
-    private gameOverShown: boolean = false;
+    private lastPointerX: number = 0;
+    private lastPointerY: number = 0;
+    private gameHasEnded: boolean = false;
+    private playerIsFaling: boolean = false;
+    private playerIsDead: boolean = false;
+    private playerFallSpeed: number =0;
 
     constructor ()
     {
@@ -45,8 +49,10 @@ export class Demo2 extends Scene
         const centerY = this.cameras.main.centerY;
 
         // Reset state
-        this.gameOverShown = false;
-        this.isFalling = false;
+        this.gameHasEnded = false;
+        this.playerIsFaling = false;
+        this.playerIsDead = false;
+        this.playerFallSpeed = 0;
 
         // Create tilemap
         this.map = this.make.tilemap({ width: 100, height: 100, tileWidth: 64, tileHeight: 64 });
@@ -61,7 +67,7 @@ export class Demo2 extends Scene
             return;
         }
 
-        // PLace the first  tiles around the player starting position
+        // Place the first  tiles around the player starting position
         this.layer.putTileAt(1, 7, 5);
         this.layer.putTileAt(1, 7, 6);
         this.layer.putTileAt(1, 7, 7);
@@ -75,6 +81,8 @@ export class Demo2 extends Scene
         // Add click to place tiles
         this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
             // Check if clicked on any UI element
+            this.lastPointerX = pointer.x;
+            this.lastPointerY = pointer.y;
             if (this.exit_text.getBounds().contains(pointer.x, pointer.y) ||
                 this.buttons.some(btn => btn.getBounds().contains(pointer.x, pointer.y))) {
                 return;
@@ -151,8 +159,8 @@ export class Demo2 extends Scene
         // Jump animation
         this.anims.create({
             key: 'player-jump',
-            frames: this.anims.generateFrameNumbers('player-jump', { start: 24, end: 28 }),
-            frameRate: 10,
+            frames: this.anims.generateFrameNumbers('player-death', { start: 3, end: 5 }),
+            frameRate: 20,
             repeat: -1
         });
         // Death animation
@@ -169,11 +177,11 @@ export class Demo2 extends Scene
         this.anims.create({ key: 'player-idle-right',    frames: [{ key: 'player-walk', frame: 39 }], frameRate: 10 });
         
         this.player = this.physics.add.sprite(centerX, centerY, 'player-walk', 0);
-        this.player.setCollideWorldBounds(true);
+        //this.player.setCollideWorldBounds(true);
         this.player.anims.play('player-idle-down');
 
         // Enable collision with tiles
-        this.layer.setCollisionByExclusion([-1]);
+        //this.layer.setCollisionByExclusion([-1]);
         this.playerCollider = this.physics.add.collider(this.player, this.layer);
 
         // Game Over text
@@ -293,14 +301,31 @@ export class Demo2 extends Scene
 
     update()
     {
-        if (this.gameOverShown) {
-            this.player.setVelocity(0, 0);
-            return;
-        }
-
         const speed = 150;
         let vx = 0;
         let vy = 0;
+
+        if (this.gameHasEnded) {
+            this.player.setVelocity(0, 0);
+            return;
+        }
+        if(this.playerIsFaling){
+            this.playerFallSpeed += 10;
+            vy= this.playerFallSpeed;
+            this.player.setVelocity(0, vy);
+            //Test is player is fallen completely out of the screen
+            if(this.player.y > this.cameras.main.height + this.player.height){
+                this.gameHasEnded = true;
+                this.playerIsFaling = false;
+                this.playerFallSpeed = 0;
+                this.gameOverText.setVisible(true);
+                this.player.setVelocity(0, 0);
+                this.player.anims.stop();
+                this.player.setVisible(false);
+            }
+        }
+
+        
         // === INPUT (checked every frame) ===
         if (this.wasd.A.isDown) vx = -speed;
         if (this.wasd.D.isDown) vx = speed;
@@ -308,24 +333,27 @@ export class Demo2 extends Scene
         if (this.wasd.S.isDown) vy = speed;
 
         // Check if player is on a tile
-        const tileBelow = this.layer!.getTileAtWorldXY(this.player.x + this.player.width / 2, this.player.y + this.player.height / 2);
+        const tileBelow = this.layer!.getTileAtWorldXY(this.player.x, this.player.y + this.player.height / 2);
         this.debug_text.setText(`Player Pos: (${this.player.x.toFixed(1)}, ${this.player.y.toFixed(1)})\n` +
             `Tile Below: ${tileBelow ? `(${tileBelow.x}, ${tileBelow.y}) idx:${tileBelow.index}` : 'None'}\n` +
-            `Falling: ${this.isFalling}\n` +
-            `Vx: ${vx}, Vy: ${vy}\n` +
+            `Falling: ${this.playerIsFaling} Fall Speed: ${this.playerFallSpeed} GameEnded: ${this.gameHasEnded}\n` +
+            `Vx: ${vx}, Vy: ${vy}\n` +            
+            `last click x: ${this.lastPointerX}, y: ${this.lastPointerY}\n` +
             `Use WASD to move. Click to place tiles.`
         );
-        const wasFalling = this.isFalling;
-        if (tileBelow && tileBelow.index !== -1) {
-            this.isFalling = false;
-            this.player.setVelocity(vx, vy);
-        } else {
-            this.isFalling = true;
-            this.player.setVelocity(vx, 300); // fall down
+        if(!this.playerIsFaling && !this.playerIsDead)
+        {
+            if (tileBelow && tileBelow.index !== -1) {
+                this.playerIsFaling = false;
+                this.player.setVelocity(vx, vy);
+            } else {
+                this.playerIsFaling = true;
+                this.player.setVelocity(vx/2, vy -100); // fall down
+            }
         }
 
         // If just started falling, disable collision and show Game Over after delay
-        if (!this.gameOverShown && this.isFalling && !wasFalling) {
+        if (this.playerIsFaling && !this.gameHasEnded && !this.playerIsDead) {
             this.playerCollider.destroy();
             this.player.setCollideWorldBounds(false);
             this.camera.stopFollow();
@@ -335,11 +363,11 @@ export class Demo2 extends Scene
                 this.player.anims.stop();
                 this.player.setVisible(false);
             });
-            this.gameOverShown = true;
+            this.playerIsDead = true;
         }
         
         // Animation
-        if (this.isFalling) {
+        if (this.playerIsFaling) {
             this.player.anims.play('player-jump', true);
         } else {
             // Moving → decide which direction to animate
