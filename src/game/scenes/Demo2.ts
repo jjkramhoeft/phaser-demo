@@ -44,6 +44,10 @@ export class Demo2 extends Scene
         const centerX = this.cameras.main.centerX;
         const centerY = this.cameras.main.centerY;
 
+        // Reset state
+        this.gameOverShown = false;
+        this.isFalling = false;
+
         // Create tilemap
         this.map = this.make.tilemap({ width: 100, height: 100, tileWidth: 64, tileHeight: 64 });
         const tileset = this.map.addTilesetImage('tilemap9', 'tilemap9', 64, 64, 0, 0);
@@ -270,6 +274,9 @@ export class Demo2 extends Scene
             });
 
         });
+        createButton(0,-1 ,'Restart', () => {
+            this.scene.restart();
+        });
         
         this.exit_text = this.add.text(900, 700, 'Exit', {
             fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
@@ -286,6 +293,11 @@ export class Demo2 extends Scene
 
     update()
     {
+        if (this.gameOverShown) {
+            this.player.setVelocity(0, 0);
+            return;
+        }
+
         const speed = 150;
         let vx = 0;
         let vy = 0;
@@ -300,6 +312,7 @@ export class Demo2 extends Scene
         this.debug_text.setText(`Player Pos: (${this.player.x.toFixed(1)}, ${this.player.y.toFixed(1)})\n` +
             `Tile Below: ${tileBelow ? `(${tileBelow.x}, ${tileBelow.y}) idx:${tileBelow.index}` : 'None'}\n` +
             `Falling: ${this.isFalling}\n` +
+            `Vx: ${vx}, Vy: ${vy}\n` +
             `Use WASD to move. Click to place tiles.`
         );
         const wasFalling = this.isFalling;
@@ -318,6 +331,9 @@ export class Demo2 extends Scene
             this.camera.stopFollow();
             this.time.delayedCall(3000, () => {
                 this.gameOverText.setVisible(true);
+                this.player.setVelocity(0, 0);
+                this.player.anims.stop();
+                this.player.setVisible(false);
             });
             this.gameOverShown = true;
         }
@@ -335,7 +351,11 @@ export class Demo2 extends Scene
                 newDir = vy < 0 ? 'up' : 'down';      // vertical wins
             }
 
-            this.player.anims.play(`player-walk-${newDir}`, true);
+            if (vx === 0 && vy === 0) {
+                this.player.anims.play(`player-idle-${newDir}`, true);
+            } else {
+                this.player.anims.play(`player-walk-${newDir}`, true);
+            }
         }
     }
 }
