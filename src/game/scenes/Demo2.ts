@@ -17,6 +17,9 @@ export class Demo2 extends Scene
     buttons: Phaser.GameObjects.Text[] = [];
     private player!: Phaser.Physics.Arcade.Sprite;
     private wasd!: { [key: string]: Phaser.Input.Keyboard.Key };
+    private isFalling: boolean = false;
+    private playerCollider!: Phaser.Physics.Arcade.Collider;
+    private gameOverText!: Phaser.GameObjects.Text;
 
     constructor ()
     {
@@ -142,6 +145,20 @@ export class Demo2 extends Scene
         this.player.setCollideWorldBounds(true);
         this.player.anims.play('player-idle-down');
 
+        // Enable collision with tiles
+        this.layer.setCollisionByExclusion([-1]);
+        this.playerCollider = this.physics.add.collider(this.player, this.layer);
+
+        // Game Over text
+        this.gameOverText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, 'Game Over', {
+            fontFamily: 'Arial Black', fontSize: 64, color: '#ff0000',
+            stroke: '#000000', strokeThickness: 8,
+            align: 'center'
+        });
+        this.gameOverText.setOrigin(0.5);
+        this.gameOverText.setScrollFactor(0);
+        this.gameOverText.setVisible(false);
+
         // Make camera follow the player
         this.camera.startFollow(this.player, true, 0.1, 0.1);
 
@@ -226,17 +243,37 @@ export class Demo2 extends Scene
         if (this.wasd.W.isDown) vy = -speed;
         if (this.wasd.S.isDown) vy = speed;
 
-        this.player.setVelocity(vx, vy);
-        
-        // Moving → decide which direction to animate
-        let newDir: 'up' | 'down' | 'left' | 'right';
-
-        if (Math.abs(vx) > Math.abs(vy)) {
-            newDir = vx < 0 ? 'left' : 'right';   // horizontal wins
+        // Check if player is on a tile
+        const tileBelow = this.layer!.getTileAtWorldXY(this.player.x, this.player.y + this.player.height / 2);
+        const wasFalling = this.isFalling;
+        if (tileBelow && tileBelow.index !== -1) {
+            this.isFalling = false;
+            this.player.setVelocity(vx, vy);
         } else {
-            newDir = vy < 0 ? 'up' : 'down';      // vertical wins
+            this.isFalling = true;
+            this.player.setVelocity(vx, 200); // fall down
         }
 
-        this.player.anims.play(`player-walk-${newDir}`, true);          
+        // If just started falling, disable collision and show Game Over
+        if (this.isFalling && !wasFalling) {
+            this.playerCollider.destroy();
+            this.gameOverText.setVisible(true);
+        }
+        
+        // Animation
+        if (this.isFalling) {
+            this.player.anims.play('player-jump', true);
+        } else {
+            // Moving → decide which direction to animate
+            let newDir: 'up' | 'down' | 'left' | 'right';
+
+            if (Math.abs(vx) > Math.abs(vy)) {
+                newDir = vx < 0 ? 'left' : 'right';   // horizontal wins
+            } else {
+                newDir = vy < 0 ? 'up' : 'down';      // vertical wins
+            }
+
+            this.player.anims.play(`player-walk-${newDir}`, true);
+        }
     }
 }
