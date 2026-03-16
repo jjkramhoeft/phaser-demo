@@ -34,19 +34,19 @@ export class Demo1 extends Scene
         this.load.spritesheet('male-basic-sword-walk', 'assets/male-basic-sword-walk.png',{ frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('male-basic-sword-thrust', 'assets/male-basic-sword-thrust128.png',{ frameWidth: 128, frameHeight: 128 });     
         this.load.spritesheet('male-basic-staff-walk', 'assets/male-basic-staff-walk.png',{ frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('male-basic-staff-thrust', 'assets/male-basic-staff-thrust128.png',{ frameWidth: 64, frameHeight: 64 });      
+        this.load.spritesheet('male-basic-staff-thrust', 'assets/male-basic-staff-thrust.png',{ frameWidth: 64, frameHeight: 64 });      
         this.load.spritesheet('male-armor-sword-walk', 'assets/male-armor-sword-walk.png',{ frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('male-armor-sword-thrust', 'assets/male-armor-sword-thrust128.png',{ frameWidth: 128, frameHeight: 128 });     
         this.load.spritesheet('male-armor-staff-walk', 'assets/male-armor-staff-walk.png',{ frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('male-armor-staff-thrust', 'assets/male-armor-staff-thrust128.png',{ frameWidth: 64, frameHeight: 64 });        
+        this.load.spritesheet('male-armor-staff-thrust', 'assets/male-armor-staff-thrust.png',{ frameWidth: 64, frameHeight: 64 });        
         this.load.spritesheet('female-basic-sword-walk', 'assets/female-basic-sword-walk.png',{ frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('female-basic-sword-thrust', 'assets/female-basic-sword-thrust128.png',{ frameWidth: 128, frameHeight: 128 });    
         this.load.spritesheet('female-basic-staff-walk', 'assets/female-basic-staff-walk.png',{ frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('female-basic-staff-thrust', 'assets/female-basic-staff-thrust128.png',{ frameWidth: 64, frameHeight: 64 });    
+        this.load.spritesheet('female-basic-staff-thrust', 'assets/female-basic-staff-thrust.png',{ frameWidth: 64, frameHeight: 64 });    
         this.load.spritesheet('female-armor-sword-walk', 'assets/female-armor-sword-walk.png',{ frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('female-armor-sword-thrust', 'assets/female-armor-sword-thrust128.png',{ frameWidth: 128, frameHeight: 128 });    
         this.load.spritesheet('female-armor-staff-walk', 'assets/female-armor-staff-walk.png',{ frameWidth: 64, frameHeight: 64 });
-        this.load.spritesheet('female-armor-staff-thrust', 'assets/female-armor-staff-thrust128.png',{ frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('female-armor-staff-thrust', 'assets/female-armor-staff-thrust.png',{ frameWidth: 64, frameHeight: 64 });
 
         // Load the spell effect sprite sheet (https://opengameart.org/content/music-magic-effect)
         this.load.spritesheet('music', 'assets/music_orig1.png',{ frameWidth: 150, frameHeight: 150 });
@@ -133,6 +133,156 @@ export class Demo1 extends Scene
             frameRate: 14,
             repeat: -1
         });
+        //male-basic-sword-walk
+        this.anims.create({
+            key: 'male-basic-sword-walk-up',
+            frames: this.anims.generateFrameNumbers('male-basic-sword-walk', { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'male-basic-sword-walk-left',
+            frames: this.anims.generateFrameNumbers('male-basic-sword-walk', { start: 13, end: 20 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'male-basic-sword-walk-down',
+            frames: this.anims.generateFrameNumbers('male-basic-sword-walk', { start: 26, end: 33 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'male-basic-sword-walk-right',
+            frames: this.anims.generateFrameNumbers('male-basic-sword-walk', { start: 39, end: 46 }),
+            frameRate: 14,
+            repeat: -1
+        });
+        //male-basic-staff-walk
+        this.anims.create({
+            key: 'male-basic-staff-walk-up',
+            frames: this.anims.generateFrameNumbers('male-basic-staff-walk', { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'male-basic-staff-walk-left',
+            frames: this.anims.generateFrameNumbers('male-basic-staff-walk', { start: 13, end: 20 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'male-basic-staff-walk-down',
+            frames: this.anims.generateFrameNumbers('male-basic-staff-walk', { start: 26, end: 33 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'male-basic-staff-walk-right',
+            frames: this.anims.generateFrameNumbers('male-basic-staff-walk', { start: 39, end: 46 }),
+            frameRate: 14,
+            repeat: -1
+        });
+        //male-armor-staff-walk
+        this.anims.create({
+            key: 'male-armor-staff-walk-up',
+            frames: this.anims.generateFrameNumbers('male-armor-staff-walk', { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'male-armor-staff-walk-left',
+            frames: this.anims.generateFrameNumbers('male-armor-staff-walk', { start: 13, end: 20 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'male-armor-staff-walk-down',
+            frames: this.anims.generateFrameNumbers('male-armor-staff-walk', { start: 26, end: 33 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'male-armor-staff-walk-right',
+            frames: this.anims.generateFrameNumbers('male-armor-staff-walk', { start: 39, end: 46 }),
+            frameRate: 14,
+            repeat: -1
+        });
+        //female-basic-staff-walk
+        this.anims.create({
+            key: 'female-basic-staff-walk-up',
+            frames: this.anims.generateFrameNumbers('female-basic-staff-walk', { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'female-basic-staff-walk-left',
+            frames: this.anims.generateFrameNumbers('female-basic-staff-walk', { start: 13, end: 20 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'female-basic-staff-walk-down',
+            frames: this.anims.generateFrameNumbers('female-basic-staff-walk', { start: 26, end: 33 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'female-basic-staff-walk-right',
+            frames: this.anims.generateFrameNumbers('female-basic-staff-walk', { start: 39, end: 46 }),
+            frameRate: 14,
+            repeat: -1
+        });
+        //female-armor-sword-walk
+        this.anims.create({
+            key: 'female-armor-sword-walk-up',
+            frames: this.anims.generateFrameNumbers('female-armor-sword-walk', { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'female-armor-sword-walk-left',
+            frames: this.anims.generateFrameNumbers('female-armor-sword-walk', { start: 13, end: 20 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'female-armor-sword-walk-down',
+            frames: this.anims.generateFrameNumbers('female-armor-sword-walk', { start: 26, end: 33 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'female-armor-sword-walk-right',
+            frames: this.anims.generateFrameNumbers('female-armor-sword-walk', { start: 39, end: 46 }),
+            frameRate: 14,
+            repeat: -1
+        });
+        //female-armor-staff-walk
+        this.anims.create({
+            key: 'female-armor-staff-walk-up',
+            frames: this.anims.generateFrameNumbers('female-armor-staff-walk', { start: 0, end: 7 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'female-armor-staff-walk-left',
+            frames: this.anims.generateFrameNumbers('female-armor-staff-walk', { start: 13, end: 20 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'female-armor-staff-walk-down',
+            frames: this.anims.generateFrameNumbers('female-armor-staff-walk', { start: 26, end: 33 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'female-armor-staff-walk-right',
+            frames: this.anims.generateFrameNumbers('female-armor-staff-walk', { start: 39, end: 46 }),
+            frameRate: 14,
+            repeat: -1
+        });
         // Create basic directional attack animations (8 frames per row)
         // Sprite sheet layout: row 0 = up, row 1 = left, row 2 = down, row 3 = right
         //male-armor-sword-thrust
@@ -169,19 +319,19 @@ export class Demo1 extends Scene
         });
         this.anims.create({
             key: 'male-armor-staff-thrust-left',
-            frames: this.anims.generateFrameNumbers('male-armor-staff-thrust', { start: 8, end: 15 }),
+            frames: this.anims.generateFrameNumbers('male-armor-staff-thrust', { start: 13, end: 20 }),
             frameRate: 14,
             repeat: 1
         });
         this.anims.create({
             key: 'male-armor-staff-thrust-down',
-            frames: this.anims.generateFrameNumbers('male-armor-staff-thrust', { start: 16, end: 23 }),
+            frames: this.anims.generateFrameNumbers('male-armor-staff-thrust', { start: 26, end: 33 }),
             frameRate: 14,
             repeat: 1
         });
         this.anims.create({
             key: 'male-armor-staff-thrust-right',
-            frames: this.anims.generateFrameNumbers('male-armor-staff-thrust', { start: 24, end: 31 }),
+            frames: this.anims.generateFrameNumbers('male-armor-staff-thrust', { start: 39, end: 46 }),
             frameRate: 14,
             repeat: 1
         });
@@ -219,19 +369,119 @@ export class Demo1 extends Scene
         });
         this.anims.create({
             key: 'female-basic-staff-thrust-left',
-            frames: this.anims.generateFrameNumbers('female-basic-staff-thrust', { start: 8, end: 15 }),
+            frames: this.anims.generateFrameNumbers('female-basic-staff-thrust', { start: 13, end: 20 }),
             frameRate: 14,
             repeat: 1
         });
         this.anims.create({
             key: 'female-basic-staff-thrust-down',
-            frames: this.anims.generateFrameNumbers('female-basic-staff-thrust', { start: 16, end: 23 }),
+            frames: this.anims.generateFrameNumbers('female-basic-staff-thrust', { start: 26, end: 33 }),
             frameRate: 14,
             repeat: 1
         });
         this.anims.create({
             key: 'female-basic-staff-thrust-right',
-            frames: this.anims.generateFrameNumbers('female-basic-staff-thrust', { start: 24, end: 31 }),
+            frames: this.anims.generateFrameNumbers('female-basic-staff-thrust', { start: 39, end: 46 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        //male-basic-sword-thrust
+        this.anims.create({
+            key: 'male-basic-sword-thrust-up',
+            frames: this.anims.generateFrameNumbers('male-basic-sword-thrust', { start: 0, end: 5 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'male-basic-sword-thrust-left',
+            frames: this.anims.generateFrameNumbers('male-basic-sword-thrust', { start: 6, end: 11 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'male-basic-sword-thrust-down',
+            frames: this.anims.generateFrameNumbers('male-basic-sword-thrust', { start: 12, end: 17 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'male-basic-sword-thrust-right',
+            frames: this.anims.generateFrameNumbers('male-basic-sword-thrust', { start: 18, end: 23 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        //male-basic-staff-thrust
+        this.anims.create({
+            key: 'male-basic-staff-thrust-up',
+            frames: this.anims.generateFrameNumbers('male-basic-staff-thrust', { start: 0, end: 7 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'male-basic-staff-thrust-left',
+            frames: this.anims.generateFrameNumbers('male-basic-staff-thrust', { start: 13, end: 20 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'male-basic-staff-thrust-down',
+            frames: this.anims.generateFrameNumbers('male-basic-staff-thrust', { start: 26, end: 33 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'male-basic-staff-thrust-right',
+            frames: this.anims.generateFrameNumbers('male-basic-staff-thrust', { start: 39, end: 46 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        //female-armor-sword-thrust
+        this.anims.create({
+            key: 'female-armor-sword-thrust-up',
+            frames: this.anims.generateFrameNumbers('female-armor-sword-thrust', { start: 0, end: 5 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'female-armor-sword-thrust-left',
+            frames: this.anims.generateFrameNumbers('female-armor-sword-thrust', { start: 6, end: 11 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'female-armor-sword-thrust-down',
+            frames: this.anims.generateFrameNumbers('female-armor-sword-thrust', { start: 12, end: 17 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'female-armor-sword-thrust-right',
+            frames: this.anims.generateFrameNumbers('female-armor-sword-thrust', { start: 18, end: 23 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        //female-armor-staff-thrust
+        this.anims.create({
+            key: 'female-armor-staff-thrust-up',
+            frames: this.anims.generateFrameNumbers('female-armor-staff-thrust', { start: 0, end: 7 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'female-armor-staff-thrust-left',
+            frames: this.anims.generateFrameNumbers('female-armor-staff-thrust', { start: 13, end: 20 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'female-armor-staff-thrust-down',
+            frames: this.anims.generateFrameNumbers('female-armor-staff-thrust', { start: 26, end: 33 }),
+            frameRate: 14,
+            repeat: 1
+        });
+        this.anims.create({
+            key: 'female-armor-staff-thrust-right',
+            frames: this.anims.generateFrameNumbers('female-armor-staff-thrust', { start: 39, end: 46 }),
             frameRate: 14,
             repeat: 1
         });
