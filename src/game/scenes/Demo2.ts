@@ -27,6 +27,8 @@ export class Demo2 extends Scene
     {
         // Load the sprite sheet for the player (https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator)
         this.load.spritesheet('player-walk', 'assets/male-basic-none-walk.png',{ frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-jump', 'assets/player-jump.png',{ frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-death', 'assets/player-death.png',{ frameWidth: 64, frameHeight: 64 });
         
     }
 
@@ -50,8 +52,16 @@ export class Demo2 extends Scene
             return;
         }
 
-        // Put one tile in the center
-        this.layer.putTileAt(0, 8, 6);
+        // PLace the first  tiles around the player starting position
+        this.layer.putTileAt(1, 7, 5);
+        this.layer.putTileAt(1, 7, 6);
+        this.layer.putTileAt(1, 7, 7);
+        this.layer.putTileAt(1, 8, 5);
+        this.layer.putTileAt(1, 8, 6);
+        this.layer.putTileAt(1, 8, 7);
+        this.layer.putTileAt(1, 9, 5);
+        this.layer.putTileAt(1, 9, 6);
+        this.layer.putTileAt(1, 9, 7);
 
         // Add click to place tiles
         this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
@@ -106,6 +116,20 @@ export class Demo2 extends Scene
             key: 'player-walk-right',
             frames: this.anims.generateFrameNumbers('player-walk', { start: 39, end: 46 }),
             frameRate: 14,
+            repeat: -1
+        });
+        // Jump animation
+        this.anims.create({
+            key: 'player-jump',
+            frames: this.anims.generateFrameNumbers('player-jump', { start: 24, end: 28 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        // Death animation
+        this.anims.create({
+            key: 'player-death',
+            frames: this.anims.generateFrameNumbers('player-death', { start: 0, end: 5 }),
+            frameRate: 10,
             repeat: -1
         });
         // Idle = first frame of each direction
