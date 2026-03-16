@@ -314,7 +314,7 @@ export class Demo2 extends Scene
             return;
         }
         if(this.playerIsFaling){
-            this.playerFallSpeed += 50;
+            this.playerFallSpeed += 40;
             vy= this.playerFallSpeed;
             this.player.setVelocity(0, vy);
             //Test is player is fallen completely out of the screen

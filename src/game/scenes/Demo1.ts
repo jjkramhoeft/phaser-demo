@@ -1,6 +1,8 @@
 import { Scene } from 'phaser';
 
 const COLORS = {
+    uiText: '#ffffff',
+    uiTextBorder: '#000000',
     buttonText: '#ffffff',
     buttonBg: '#2d2d2d',
     buttonHoverBg: '#555555',
@@ -62,15 +64,15 @@ export class Demo1 extends Scene
         this.background.setAlpha(0.5);
 
         this.msg_text = this.add.text(0, 0, 'Demo 1', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
+            fontFamily: 'Arial Black', fontSize: 38, color: COLORS.uiText,
+            stroke: COLORS.uiTextBorder, strokeThickness: 8,
             align: 'center'
         });
         this.msg_text.setOrigin(0);
         
         this.exit_text = this.add.text(900, 700, 'Exit', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
+            fontFamily: 'Arial Black', fontSize: 38, color: COLORS.uiText,
+            stroke: COLORS.uiTextBorder, strokeThickness: 8,
             align: 'center'
         });
         this.exit_text.setOrigin(0);
@@ -79,6 +81,72 @@ export class Demo1 extends Scene
             this.scene.start('MainMenu');
         });        
 
+        // Create all animations separately so the create() method stays concise.
+        this.createAnimations();
+
+        const centerX = this.cameras.main.centerX;
+        const centerY = this.cameras.main.centerY;
+
+        this.player = this.physics.add.sprite(centerX, centerY, `${this.playerSex}-${this.playerGear}-${this.playerWeapon}-walk`, 0);
+        this.player.setCollideWorldBounds(true);
+        this.player.anims.play(`${this.playerSex}-${this.playerGear}-${this.playerWeapon}-idle-down`);
+
+        // Input (arrows + WASD)
+        this.cursors = this.input.keyboard!.createCursorKeys();
+        this.wasd = this.input.keyboard!.addKeys('W,S,A,D,Q') as any;
+
+        // Helper function to create a nice button
+        const createButton = (y: number, x: number, text: string, callback: () => void) => {
+            const button = this.add.text(centerX + 220 + x*150, 50 +  y*60, text, {
+                fontFamily: 'Arial',
+                fontSize: '22px',
+                color: COLORS.buttonText,
+                backgroundColor: COLORS.buttonBg,
+                align: 'center',
+                fixedWidth: 100
+            })
+                .setPadding(5)
+                .setOrigin(0.5)
+                .setInteractive({ useHandCursor: true });
+
+            // Hover effects
+            button.on('pointerover', () => button.setBackgroundColor(COLORS.buttonHoverBg));
+            button.on('pointerout', () => button.setBackgroundColor(COLORS.buttonBg));
+
+            // Click action
+            button.on('pointerdown', () => {
+                button.setScale(0.95); // press feedback
+                callback();
+                // Reset scale after click
+                this.time.delayedCall(100, () => button.setScale(1));
+            });
+
+            return button;
+        };
+
+        createButton(0 ,0, 'Male', () => {
+            this.playerSex='male';
+        });
+        createButton(0 ,1, 'Female', () => {
+            this.playerSex='female';
+        });
+        createButton(1 ,0, 'Basic', () => {
+            this.playerGear='basic';
+        });
+        createButton(1 ,1, 'Armor', () => {
+            this.playerGear='armor';
+        });
+        createButton(2 ,0, 'Staff', () => {
+            this.playerWeapon='staff';
+        });
+        createButton(2 ,1, 'Sword', () => {
+            this.playerWeapon='sword';
+        });
+
+    }
+
+    private createAnimations()
+    {
         // Create basic directional walk animations (8 frames per row)
         // Sprite sheet layout: row 0 = up, row 1 = left, row 2 = down, row 3 = right
         //male-armor-sword-walk
@@ -526,67 +594,6 @@ export class Demo1 extends Scene
         this.anims.create({ key: 'female-basic-staff-idle-left',  frames: [{ key: 'female-basic-staff-walk', frame: 13 }],  frameRate: 10 });
         this.anims.create({ key: 'female-basic-staff-idle-down', frames: [{ key: 'female-basic-staff-walk', frame: 26 }],  frameRate: 10 });
         this.anims.create({ key: 'female-basic-staff-idle-right',    frames: [{ key: 'female-basic-staff-walk', frame: 39 }], frameRate: 10 });
-
-
-        const centerX = this.cameras.main.centerX;
-        const centerY = this.cameras.main.centerY;
-
-        this.player = this.physics.add.sprite(centerX, centerY, `${this.playerSex}-${this.playerGear}-${this.playerWeapon}-walk`, 0);
-        this.player.setCollideWorldBounds(true);
-        this.player.anims.play(`${this.playerSex}-${this.playerGear}-${this.playerWeapon}-idle-down`);
-
-        // Input (arrows + WASD)
-        this.cursors = this.input.keyboard!.createCursorKeys();
-        this.wasd = this.input.keyboard!.addKeys('W,S,A,D,Q') as any;
-
-        // Helper function to create a nice button
-        const createButton = (y: number, x: number, text: string, callback: () => void) => {
-            const button = this.add.text(centerX + 220 + x*150, 50 +  y*60, text, {
-                fontFamily: 'Arial',
-                fontSize: '22px',
-                color: COLORS.buttonText,
-                backgroundColor: COLORS.buttonBg,
-                align: 'center',
-                fixedWidth: 100
-            })
-                .setPadding(5)
-                .setOrigin(0.5)
-                .setInteractive({ useHandCursor: true });
-
-            // Hover effects
-            button.on('pointerover', () => button.setBackgroundColor(COLORS.buttonHoverBg));
-            button.on('pointerout', () => button.setBackgroundColor(COLORS.buttonBg));
-
-            // Click action
-            button.on('pointerdown', () => {
-                button.setScale(0.95); // press feedback
-                callback();
-                // Reset scale after click
-                this.time.delayedCall(100, () => button.setScale(1));
-            });
-
-            return button;
-        };
-
-        createButton(0 ,0, 'Male', () => {
-            this.playerSex='male';
-        });
-        createButton(0 ,1, 'Female', () => {
-            this.playerSex='female';
-        });
-        createButton(1 ,0, 'Basic', () => {
-            this.playerGear='basic';
-        });
-        createButton(1 ,1, 'Armor', () => {
-            this.playerGear='armor';
-        });
-        createButton(2 ,0, 'Staff', () => {
-            this.playerWeapon='staff';
-        });
-        createButton(2 ,1, 'Sword', () => {
-            this.playerWeapon='sword';
-        });
-
     }
 
     update()
