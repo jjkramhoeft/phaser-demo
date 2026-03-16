@@ -79,6 +79,7 @@ export class Demo2 extends Scene
             align: 'center'
         });
         this.msg_text.setOrigin(0);
+        this.msg_text.setScrollFactor(0);
 
         // Create basic directional walk animations (8 frames per row)
         // Sprite sheet layout: row 0 = up, row 1 = left, row 2 = down, row 3 = right
@@ -117,6 +118,9 @@ export class Demo2 extends Scene
         this.player.setCollideWorldBounds(true);
         this.player.anims.play('player-idle-down');
 
+        // Make camera follow the player
+        this.camera.startFollow(this.player);
+
         // Input (arrows + WASD)
         this.wasd = this.input.keyboard!.addKeys('W,S,A,D') as any;
 
@@ -147,6 +151,7 @@ export class Demo2 extends Scene
             });
 
             this.buttons.push(button);
+            button.setScrollFactor(0);
             return button;
         };
 
@@ -179,6 +184,7 @@ export class Demo2 extends Scene
             align: 'center'
         });
         this.exit_text.setOrigin(0);
+        this.exit_text.setScrollFactor(0);
         this.exit_text.setInteractive({ useHandCursor: true });
         this.exit_text.on('pointerdown', () => {
             this.scene.start('MainMenu');
