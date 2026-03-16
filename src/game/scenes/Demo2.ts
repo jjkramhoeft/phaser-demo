@@ -258,6 +258,7 @@ export class Demo2 extends Scene
         // If just started falling, disable collision and show Game Over after delay
         if (!this.gameOverShown && this.isFalling && !wasFalling) {
             this.playerCollider.destroy();
+            this.player.setCollideWorldBounds(false);
             this.camera.stopFollow();
             this.time.delayedCall(5000, () => {
                 this.gameOverText.setVisible(true);
