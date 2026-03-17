@@ -69,7 +69,7 @@ export class MainMenu extends Scene {
             this.scene.start('Demo2');
         });
 
-        createButton(2 ,0, 'Start Demo 3', () => {
+        createButton(2 ,0, 'Chunked Tilemap', () => {
             this.scene.start('Demo3');
         });
 
