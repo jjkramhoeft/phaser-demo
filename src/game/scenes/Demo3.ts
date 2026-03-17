@@ -5,6 +5,16 @@ interface Chunk {
     map: Phaser.Tilemaps.Tilemap;
     layer: Phaser.Tilemaps.TilemapLayer;
 }
+interface SavedChunk {
+    chunkX: number;
+    chunkY: number;
+    data: number[][];        // CHUNK_SIZE x CHUNK_SIZE tile indices
+}
+interface SaveData {
+    timestamp: number;
+    chunks: SavedChunk[];
+}
+
 
 export class Demo3 extends Scene {
     private chunks: Map<string, Chunk> = new Map();
@@ -15,7 +25,7 @@ export class Demo3 extends Scene {
     debug_text: Phaser.GameObjects.Text;
     private player!: Phaser.Physics.Arcade.Sprite;
     private playerIsFaling: boolean = false;
-    private playerIsCasting: boolean = false;   
+    private playerIsCasting: boolean = false;
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
     private keys!: { [key: string]: Phaser.Input.Keyboard.Key };
     private playerFacing: 'up' | 'down' | 'left' | 'right' = 'down';
@@ -46,7 +56,7 @@ export class Demo3 extends Scene {
         this.title_text.setOrigin(0);
         this.title_text.setScrollFactor(0);
         this.title_text.setDepth(2);
-        
+
         this.debug_text = this.add.text(0, 600, 'Debug Info:', {
             fontFamily: 'Arial', fontSize: 20, color: '#ffffff',
             stroke: '#000000', strokeThickness: 3,
@@ -54,7 +64,7 @@ export class Demo3 extends Scene {
         });
         this.debug_text.setOrigin(0);
         this.debug_text.setScrollFactor(0);
-        
+
         this.debug_text.setDepth(2);
 
         createDemoAnimations(this);// Create animations separately so the create() method stays concise.
@@ -75,7 +85,7 @@ export class Demo3 extends Scene {
 
         // Helper function to create a nice button
         const createButton = (row: number, text: string, callback: () => void) => {
-            const button = this.add.text(this.cameras.main.centerX + 440, 570 + row * 50, text, {
+            const button = this.add.text(this.cameras.main.centerX + 440, 480 + row * 50, text, {
                 fontFamily: 'Arial',
                 fontSize: '22px',
                 color: '#ffffff',
@@ -102,13 +112,16 @@ export class Demo3 extends Scene {
             return button;
         };
 
-        createButton(0, 'Load', () => {
+        createButton(2, 'Load', () => {
+            this.loadFromLocalStorage();
         });
-        createButton(1, 'Save', () => {
+        createButton(3, 'Save', () => {
+            this.saveToLocalStorage();
         });
-        createButton(2, 'Restart', () => {
+        createButton(4, 'Restart', () => {
+            this.scene.restart();
         });
-        createButton(3, 'Exit', () => {
+        createButton(5, 'Exit', () => {
             this.scene.start('MainMenu');
         });
 
@@ -172,12 +185,107 @@ export class Demo3 extends Scene {
         this.chunks.set(`${chunkX},${chunkY}`, { map, layer });
     }
 
+    // ==================================================================
+    //  SAVE / LOAD SYSTEM
+    // ==================================================================
+
+    /** Returns the full save object (ready for JSON) */
+    private getSaveData(): SaveData {
+        const savedChunks: SavedChunk[] = [];
+
+        this.chunks.forEach((chunk, key) => {
+            const data = this.getChunkData(chunk.layer);
+            // Optional: skip completely empty chunks (uncomment if you want)
+            // if (data.every(row => row.every(tile => tile === -1))) return;
+
+            const [chunkX, chunkY] = key.split(',').map(Number);
+            savedChunks.push({ chunkX, chunkY, data });
+        });
+
+        return {
+            timestamp: Date.now(),
+            chunks: savedChunks
+        };
+    }
+
+    /** Extracts tile indices from a layer (fast) */
+    private getChunkData(layer: Phaser.Tilemaps.TilemapLayer): number[][] {
+        return layer.layer.data.map(row =>
+            row.map(tile => (tile && tile.index !== -1 ? tile.index : -1))
+        );
+    }
+
+    /** Loads a previously saved world */
+    private loadSaveData(saveData: SaveData): void {
+        this.destroyAllChunks(); // clear current world
+
+        saveData.chunks.forEach(saved => {
+            this.createChunk(saved.chunkX, saved.chunkY);
+
+            const key = `${saved.chunkX},${saved.chunkY}`;
+            const chunk = this.chunks.get(key)!;
+
+            this.populateLayer(chunk.layer, saved.data);
+        });
+
+        console.log(`✅ Loaded ${saveData.chunks.length} chunks`);
+    }
+
+    /** Fills a layer from saved 2D data */
+    private populateLayer(layer: Phaser.Tilemaps.TilemapLayer, data: number[][]): void {
+        for (let y = 0; y < this.CHUNK_SIZE; y++) {
+            for (let x = 0; x < this.CHUNK_SIZE; x++) {
+                const index = data[y][x];
+                if (index !== -1) {
+                    layer.putTileAt(index, x, y);
+                }
+            }
+        }
+    }
+
+    /** Destroys every chunk (used before loading) */
+    private destroyAllChunks(): void {
+        this.chunks.forEach(chunk => {
+            chunk.layer.destroy();
+            chunk.map.destroy();
+        });
+        this.chunks.clear();
+    }
+
+    // ==================================================================
+    //  PUBLIC SAVE/LOAD METHODS (use these!)
+    // ==================================================================
+
+    /** Save to browser localStorage (instant) */
+    public saveToLocalStorage(): void {
+        const data = this.getSaveData();
+        localStorage.setItem('phaserTilemapSave', JSON.stringify(data));
+        console.log(`💾 Saved ${data.chunks.length} chunks to localStorage`);
+    }
+
+    /** Load from browser localStorage */
+    public loadFromLocalStorage(): void {
+        const json = localStorage.getItem('phaserTilemapSave');
+        if (!json) {
+            console.warn('No save file found in localStorage');
+            return;
+        }
+        try {
+            const saveData: SaveData = JSON.parse(json);
+            this.loadSaveData(saveData);
+        } catch (e) {
+            console.error('Corrupted save data');
+        }
+    }
+
+
+
     update() {
         const playerSpeed = 200;
         let playerXSpeed = 0;
         let playerYSpeed = 0;
 
-        if (Phaser.Input.Keyboard.JustDown(this.keys.Q) && !this.playerIsCasting){
+        if (Phaser.Input.Keyboard.JustDown(this.keys.Q) && !this.playerIsCasting) {
             this.playerIsCasting = true;
             this.player.setVelocity(0, 0);
             this.player.anims.play(`player-idle-${this.playerFacing}`, true);
@@ -202,11 +310,11 @@ export class Demo3 extends Scene {
 
         // Normalize diagonal movement speed
         if (playerXSpeed !== 0 && playerYSpeed !== 0) {
-            const norm = playerSpeed / Math.sqrt(2);  
+            const norm = playerSpeed / Math.sqrt(2);
             playerXSpeed = playerXSpeed > 0 ? norm : -norm;
             playerYSpeed = playerYSpeed > 0 ? norm : -norm;
             this.player.anims.play(`player-walk-${this.playerFacing}`, true);
-        }else {
+        } else {
             this.player.anims.play(`player-idle-${this.playerFacing}`, true);
         }
         this.player.setVelocity(playerXSpeed, playerYSpeed);
