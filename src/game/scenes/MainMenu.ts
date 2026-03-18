@@ -65,7 +65,7 @@ export class MainMenu extends Scene {
             this.scene.start('Demo1');
         });
 
-        createButton(1 ,0, 'Tile Demo', () => {
+        createButton(1 ,0, 'Layered Tilemap', () => {
             this.scene.start('Demo2');
         });
 

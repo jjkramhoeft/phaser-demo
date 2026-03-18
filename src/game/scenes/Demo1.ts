@@ -174,6 +174,7 @@ export class Demo1 extends Scene {
             this.oldvx = vx;
             this.oldvy = vy;
         }
+        //this.player.body?.velocity.normalize().scale(speed); // Normalize diagonal movement
 
         // === NORMALIZE DIAGONAL MOVEMENT (so you don't go faster diagonally) ===
         if (vx !== 0 && vy !== 0) {
