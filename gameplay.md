@@ -30,17 +30,18 @@
 
 ##### Gameplay Mechanics
 
-##### Tile Wold Building 
+##### Tile Wold Building
+
+9-7-99-7
 
 |Ciffer|0|1|2|3|4|5|6|7|8|9|
 |-|-|-|-|-|-|-|-|-|-|-|
-|Biome|Void|Rock|Desert|Grasslands|Forest|Water|Swamp|Crystal|Jungle|Mountains|
+|Biome|Void|Rock|Desert|Grasslands|Forest|Water|Swamp|Crystal|Jungle/Lava/?|Mountains|
 |Ground Tile|||||||||||
 |Type|No other|Decoration|Small Blocking|Large blocking|Full Blocking|Double tile|Unique Tile||||
 |Index ciffer 1|-||||||||||
 |Index ciffer 2|-||||||||||
-
-
+|MOB span|None|Critter 1|Critter 2|Critter 3|Mob 1|Mob 2|Mob 3|Mob 4|||
 
 
 

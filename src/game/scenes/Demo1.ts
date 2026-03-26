@@ -30,6 +30,7 @@ export class Demo1 extends Scene {
     }
 
     preload() {
+        
         // Load the sprite sheet for the player (https://liberatedpixelcup.github.io/Universal-LPC-Spritesheet-Character-Generator)
         const sexes =['male','female'];
         const gears = ['nude','bare','basic','armor'];
@@ -57,14 +58,14 @@ export class Demo1 extends Scene {
         // Load the spell effect sprite sheet (https://opengameart.org/content/music-magic-effect)
         this.load.spritesheet('music', 'assets/music_orig1.png', { frameWidth: 150, frameHeight: 150 });
         //Paint your own: https://www.piskelapp.com/p/create/sprite/
+        this.load.image('colortest4', 'assets/colortest4.png');
     }
 
     create() {
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor(0x00ff00);
 
-        this.background = this.add.image(512, 384, 'background');
-        this.background.setAlpha(0.5);
+        this.background = this.add.image(300, 600, 'colortest4');
 
         this.msg_text = this.add.text(0, 0, 'Demo 1', {
             fontFamily: 'Arial Black', fontSize: 38, color: COLORS.uiText,
