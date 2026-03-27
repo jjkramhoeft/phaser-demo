@@ -56,7 +56,7 @@ export class Demo1 extends Scene {
             });        
         });
         // Load the spell effect sprite sheet (https://opengameart.org/content/music-magic-effect)
-        this.load.spritesheet('music', 'assets/music_orig1.png', { frameWidth: 150, frameHeight: 150 });
+        this.load.spritesheet('music', 'assets/music11.png', { frameWidth: 150, frameHeight: 150 });
         //Paint your own: https://www.piskelapp.com/p/create/sprite/
         this.load.image('colortest4', 'assets/colortest4.png');
     }
