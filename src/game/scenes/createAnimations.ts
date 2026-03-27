@@ -25,16 +25,16 @@ export function createAnimations(scene: Scene) {
         gears.forEach(gear => {            
             const weapons = ['none','dagger','staff'];
             weapons.forEach(weapon => {
-                anims.create({ key: `${sex}-${gear}-${weapon}-thrust-up`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 0, end: 7 }), frameRate: 14, repeat: -1 });
-                anims.create({ key: `${sex}-${gear}-${weapon}-thrust-left`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 8, end: 15 }), frameRate: 14, repeat: -1 });
-                anims.create({ key: `${sex}-${gear}-${weapon}-thrust-down`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 16, end: 23 }), frameRate: 14, repeat: -1 });
-                anims.create({ key: `${sex}-${gear}-${weapon}-thrust-right`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 24, end: 31 }), frameRate: 14, repeat: -1 });    
+                anims.create({ key: `${sex}-${gear}-${weapon}-thrust-up`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 0, end: 7 }), frameRate: 14, repeat: 1 });
+                anims.create({ key: `${sex}-${gear}-${weapon}-thrust-left`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 8, end: 15 }), frameRate: 14, repeat: 1 });
+                anims.create({ key: `${sex}-${gear}-${weapon}-thrust-down`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 16, end: 23 }), frameRate: 14, repeat: 1 });
+                anims.create({ key: `${sex}-${gear}-${weapon}-thrust-right`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 24, end: 31 }), frameRate: 14, repeat: 1 });    
             });
             let weapon='sword';
-            anims.create({ key: `${sex}-${gear}-${weapon}-thrust-up`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 0, end: 5 }), frameRate: 14, repeat: -1 });
-            anims.create({ key: `${sex}-${gear}-${weapon}-thrust-left`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 6, end: 11 }), frameRate: 14, repeat: -1 });
-            anims.create({ key: `${sex}-${gear}-${weapon}-thrust-down`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 12, end: 17 }), frameRate: 14, repeat: -1 });
-            anims.create({ key: `${sex}-${gear}-${weapon}-thrust-right`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 18, end: 23 }), frameRate: 14, repeat: -1 });    
+            anims.create({ key: `${sex}-${gear}-${weapon}-thrust-up`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 0, end: 5 }), frameRate: 14, repeat: 1 });
+            anims.create({ key: `${sex}-${gear}-${weapon}-thrust-left`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 6, end: 11 }), frameRate: 14, repeat: 1 });
+            anims.create({ key: `${sex}-${gear}-${weapon}-thrust-down`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 12, end: 17 }), frameRate: 14, repeat: 1 });
+            anims.create({ key: `${sex}-${gear}-${weapon}-thrust-right`, frames: anims.generateFrameNumbers(`${sex}-${gear}-${weapon}-thrust`, { start: 18, end: 23 }), frameRate: 14, repeat: 1 });    
         });        
     });
 
