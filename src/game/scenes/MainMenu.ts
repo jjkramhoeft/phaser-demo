@@ -77,7 +77,7 @@ export class MainMenu extends Scene {
             this.scene.start('Demo4');
         });
 
-        createButton(1 ,1, 'Start Demo 5', () => {
+        createButton(1 ,1, 'Player Sound', () => {
             this.scene.start('Demo5');
         });
 

@@ -15,8 +15,8 @@ export class Demo5 extends Scene
     private wasd!: { [key: string]: Phaser.Input.Keyboard.Key };
     private castKey!: Phaser.Input.Keyboard.Key;
 
-    private readonly moveSpeed = 180;
-    private readonly footstepDistance = 90;
+    private readonly moveSpeed = 150;
+    private readonly footstepDistance = 50;
     private footstepAccumulator = 0;
 
     private facingDirection: Direction = 'down';
@@ -45,8 +45,9 @@ export class Demo5 extends Scene
         this.load.spritesheet('spellVisualFx', 'assets/music11.png', { frameWidth: 150, frameHeight: 150 });   
         
         //Load sound for spell casting and footsteps.
-        this.load.audio('spellSoundFx', 'assets/spell1.wav');
-        this.load.audio('stepsSoundFx', 'assets/footsteps2.wav');
+        this.load.audio('spellSoundFxL', 'assets/shortspell1.wav');
+        this.load.audio('spellSoundFx', 'assets/veryshortspell1.wav');
+        this.load.audio('stepsSoundFx', 'assets/shortfootsteps.wav');
 
         
     }
@@ -88,8 +89,8 @@ export class Demo5 extends Scene
         this.wasd = this.input.keyboard!.addKeys('W,A,S,D') as { [key: string]: Phaser.Input.Keyboard.Key };
         this.castKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        this.spellSoundFx = this.sound.add('spellSoundFx', { volume: 0.8 });
-        this.stepsSoundFx = this.sound.add('stepsSoundFx', { volume: 0.35 });
+        this.spellSoundFx = this.sound.add('spellSoundFx', { volume: 0.4 });
+        this.stepsSoundFx = this.sound.add('stepsSoundFx', { volume: 0.4 });
 
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
             this.stopAllDemoSounds();
@@ -212,8 +213,8 @@ export class Demo5 extends Scene
 
     private spawnSpellVisual(direction: { x: number; y: number }): void {
         const spell = this.add.sprite(
-            this.player.x + direction.x * 36,
-            this.player.y + direction.y * 36,
+            this.player.x + direction.x * 24,
+            this.player.y + direction.y * 24,
             'spellVisualFx'
         );
         spell.setScale(0.45);
@@ -221,9 +222,9 @@ export class Demo5 extends Scene
 
         this.tweens.add({
             targets: spell,
-            x: spell.x + direction.x * 90,
-            y: spell.y + direction.y * 90,
-            duration: 250,
+            x: spell.x + direction.x * 80,
+            y: spell.y + direction.y * 80,
+            duration: 900,
             ease: 'Quad.easeOut',
             onComplete: () => {
                 spell.destroy();
