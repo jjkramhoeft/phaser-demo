@@ -73,7 +73,7 @@ export class MainMenu extends Scene {
             this.scene.start('Demo3');
         });
 
-        createButton(0 ,1, 'Start Demo 4', () => {
+        createButton(0 ,1, 'Music', () => {
             this.scene.start('Demo4');
         });
 
