@@ -21,6 +21,7 @@ export class Demo5 extends Scene
 
     private facingDirection: Direction = 'down';
     private isCasting = false;
+    private castVector = { x: 0, y: 1 };
 
     constructor ()
     {
@@ -114,6 +115,7 @@ export class Demo5 extends Scene
         const { vx, vy } = this.getMoveVelocity();
         this.player.setVelocity(vx, vy);
         this.updateMovementAnimation(vx, vy);
+        this.updateCastVector(vx, vy);
         this.updateFootsteps(vx, vy, delta);
 
     }
@@ -159,21 +161,9 @@ export class Demo5 extends Scene
     }
 
     private getMoveVelocity(): { vx: number; vy: number } {
-        let vx = 0;
-        let vy = 0;
-
-        if (this.wasd.A.isDown) {
-            vx -= this.moveSpeed;
-        }
-        if (this.wasd.D.isDown) {
-            vx += this.moveSpeed;
-        }
-        if (this.wasd.W.isDown) {
-            vy -= this.moveSpeed;
-        }
-        if (this.wasd.S.isDown) {
-            vy += this.moveSpeed;
-        }
+        const input = this.readInputAxes();
+        let vx = input.x * this.moveSpeed;
+        let vy = input.y * this.moveSpeed;
 
         if (vx !== 0 && vy !== 0) {
             const diagonalSpeed = this.moveSpeed / Math.sqrt(2);
@@ -203,9 +193,13 @@ export class Demo5 extends Scene
         this.isCasting = true;
         this.player.setVelocity(0, 0);
 
-        const attackAnimationKey = `player-attack-${this.facingDirection}`;
+        const castDirection = this.getCastDirectionVector();
+        const attackDirection = this.getCardinalDirectionFromVector(castDirection);
+        this.facingDirection = attackDirection;
+
+        const attackAnimationKey = `player-attack-${attackDirection}`;
         this.player.play(attackAnimationKey, true);
-        this.spawnSpellVisual();
+        this.spawnSpellVisual(castDirection);
 
         this.spellSoundFx.stop();
         this.spellSoundFx.play();
@@ -216,11 +210,10 @@ export class Demo5 extends Scene
         });
     }
 
-    private spawnSpellVisual(): void {
-        const offset = this.getDirectionVector(this.facingDirection);
+    private spawnSpellVisual(direction: { x: number; y: number }): void {
         const spell = this.add.sprite(
-            this.player.x + offset.x * 36,
-            this.player.y + offset.y * 36,
+            this.player.x + direction.x * 36,
+            this.player.y + direction.y * 36,
             'spellVisualFx'
         );
         spell.setScale(0.45);
@@ -228,8 +221,8 @@ export class Demo5 extends Scene
 
         this.tweens.add({
             targets: spell,
-            x: spell.x + offset.x * 90,
-            y: spell.y + offset.y * 90,
+            x: spell.x + direction.x * 90,
+            y: spell.y + direction.y * 90,
             duration: 250,
             ease: 'Quad.easeOut',
             onComplete: () => {
@@ -261,17 +254,64 @@ export class Demo5 extends Scene
         }
     }
 
-    private getDirectionVector(direction: Direction): { x: number; y: number } {
-        switch (direction) {
-            case 'up':
-                return { x: 0, y: -1 };
-            case 'down':
-                return { x: 0, y: 1 };
-            case 'left':
-                return { x: -1, y: 0 };
-            default:
-                return { x: 1, y: 0 };
+    private readInputAxes(): { x: number; y: number } {
+        let x = 0;
+        let y = 0;
+
+        if (this.wasd.A.isDown) {
+            x -= 1;
         }
+        if (this.wasd.D.isDown) {
+            x += 1;
+        }
+        if (this.wasd.W.isDown) {
+            y -= 1;
+        }
+        if (this.wasd.S.isDown) {
+            y += 1;
+        }
+
+        return { x, y };
+    }
+
+    private getCastDirectionVector(): { x: number; y: number } {
+        const input = this.readInputAxes();
+
+        if (input.x === 0 && input.y === 0) {
+            return this.castVector;
+        }
+
+        const normalized = this.normalizeVector(input.x, input.y);
+        this.castVector = normalized;
+        return normalized;
+    }
+
+    private updateCastVector(vx: number, vy: number): void {
+        if (vx === 0 && vy === 0) {
+            return;
+        }
+
+        this.castVector = this.normalizeVector(vx, vy);
+    }
+
+    private getCardinalDirectionFromVector(vector: { x: number; y: number }): Direction {
+        if (Math.abs(vector.x) > Math.abs(vector.y)) {
+            return vector.x < 0 ? 'left' : 'right';
+        }
+
+        return vector.y < 0 ? 'up' : 'down';
+    }
+
+    private normalizeVector(x: number, y: number): { x: number; y: number } {
+        const length = Math.hypot(x, y);
+        if (length === 0) {
+            return { x: 0, y: 0 };
+        }
+
+        return {
+            x: x / length,
+            y: y / length
+        };
     }
 
     private stopAllDemoSounds(): void {
