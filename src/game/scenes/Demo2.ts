@@ -32,7 +32,7 @@ export class Demo2 extends Scene {
     }
 
     preload() {
-        this.load.spritesheet('player-walk', 'assets/player-walk.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('player-walk', 'assets/player-walk-orig.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('tilemap9', 'assets/tilemap9.png', { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('rocks', 'assets/rocks.png', { frameWidth: 64, frameHeight: 64 });
 
