@@ -14,6 +14,8 @@ export class Demo1 extends Scene {
     background: Phaser.GameObjects.Image;
     msg_text: Phaser.GameObjects.Text;
     exit_text: Phaser.GameObjects.Text;
+    spellSound: Phaser.Sound.BaseSound;
+    stepsSound: Phaser.Sound.BaseSound;
     private player!: Phaser.Physics.Arcade.Sprite;
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
     private wasd!: { [key: string]: Phaser.Input.Keyboard.Key };
@@ -59,6 +61,9 @@ export class Demo1 extends Scene {
         this.load.spritesheet('music', 'assets/music11.png', { frameWidth: 150, frameHeight: 150 });
         //Paint your own: https://www.piskelapp.com/p/create/sprite/
         this.load.image('colortest4', 'assets/colortest4.png');
+        
+        this.load.audio('spell', 'assets/spell1.wav');
+        this.load.audio('steps', 'assets/stepps2.wav');
     }
 
     create() {
@@ -84,6 +89,9 @@ export class Demo1 extends Scene {
         this.exit_text.on('pointerdown', () => {
             this.scene.start('MainMenu');
         });
+
+        this.spellSound = this.sound.add('spell', { volume: 1.0 });
+        this.stepsSound = this.sound.add('steps', { volume: 1.0 });
 
         // Create all animations separately so the create() method stays concise.
         createAnimations(this);
