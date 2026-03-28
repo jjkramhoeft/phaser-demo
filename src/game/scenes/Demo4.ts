@@ -22,6 +22,8 @@ export class Demo4 extends Scene
     this.load.audio('bg_music1', ['assets/music1.ogg', 'assets/music1.mp3']);
     this.load.audio('bg_music2', ['assets/music2.ogg', 'assets/music2.mp3']);
     this.load.audio('bg_music3', ['assets/music3.ogg', 'assets/music3.mp3']);
+    this.load.audio('bg_music4', ['assets/music4.ogg', 'assets/music4.mp3']);
+    this.load.audio('bg_music5', ['assets/music5.ogg', 'assets/music5.mp3']);
     
     // Short magic spell effect is fine as a WAV
     this.load.audio('summon_sfx1', 'assets/spell1.wav');
@@ -37,7 +39,7 @@ export class Demo4 extends Scene
 
         // Tilføj musikken til spillet
         this.bgMusic = this.sound.add('bg_music1', { 
-            volume: 0.5, 
+            volume: this.bgMusicVolume, 
             loop: true 
         });
 
@@ -112,6 +114,12 @@ export class Demo4 extends Scene
         });
         createButton(3,1, 'Music 3', () => {
              this.switchMusic('bg_music3');
+        });
+        createButton(4,1, 'Music 4', () => {
+             this.switchMusic('bg_music4');
+        });
+        createButton(5,1, 'Music 5', () => {
+             this.switchMusic('bg_music5');
         });
 
         createButton(0,0, 'Vol. 5%', () => {
